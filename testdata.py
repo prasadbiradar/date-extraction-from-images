@@ -1,12 +1,8 @@
 # encoding=utf8
+import datefinder
+from datetime import datetime
+
 import sys
-
-
-
-
-
-
-
 import csv
 import boto3
 
@@ -16,7 +12,6 @@ import pytesseract
 import cv2
 import os
 import re
-
 
 class TestData:
     """docstring for TestData"""
@@ -30,21 +25,24 @@ class TestData:
     @staticmethod
     def extract(filename):
 
-        with open('credentials.csv', 'r') as input:
+        """
+        with open('/home/ubuntu/date-extraction-from-image/credentials.csv', 'r') as input:
             next(input)
             reader = csv.reader(input)
             for line in reader:
                 access_key_id = line[2]
                 secret_access_key = line[3]
+        """
 
+        access_key_id = 'AKIA6LRPMXT6S5TPPDIO'
+        secret_access_key = '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'
 
         client = boto3.client('rekognition',
                               aws_access_key_id=access_key_id,
                               aws_secret_access_key=secret_access_key, region_name='us-east-1')
 
 
-
-        UPLOADED_FILE = '/root/Desktop/image_to_text_api2/image_to_text_api/temp_files/'+filename
+        UPLOADED_FILE = '/tmp/'+filename
 
         filename = "{}.png|jpeg|jpg".format(os.getpid())
         
@@ -66,8 +64,12 @@ class TestData:
 
         if line:
             l1 =list(filter(None,line.groups()))    
+
+            newDate = [ x for x in datefinder.find_dates(l1[0]) ][0]
+
             date=re.split('[- / . ' ' ]',l1[0])
-            opt["date"] = [date[2] + "/" + date[1] + "/" + date[0]]
+            #opt["date"] = [date[2] + "/" + date[1] + "/" + date[0]]
+            opt["Date"] = [ newDate.strftime("%Y - %m - %d") ]
             
             return opt
 

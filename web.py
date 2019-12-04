@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from testdata import TestData
 from data import Data
 
-UPLOAD_FOLDER = '/root/Desktop/image_to_text_api2/image_to_text_api/temp_files'
+UPLOAD_FOLDER = '/tmp'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
@@ -71,4 +71,4 @@ def uploaded_file(filename):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
